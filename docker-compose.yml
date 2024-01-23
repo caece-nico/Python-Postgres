@@ -1,0 +1,13 @@
+version: '3.8'
+services:
+  postgres_db:
+    build: ./postgres/
+    container_name: postgres_cta
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - ./db_postgres_vol/volume/:/var/lib/postgresql/data
+
+
+  
