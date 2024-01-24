@@ -8,6 +8,7 @@
     * [Cursores](#cursores)
     * [Where](#where)
     * [DROP TABLE](#drop-table)
+    * [UPADTE](#update)
 4. [SQL Injection](#4.-sql-injection)
 
 ## 1. Intro al proyecto
@@ -179,6 +180,20 @@ Borramos toda una tabla
 ```python
 connection.execute("DROP TABLE users;")
 connection.commit()
+```
+
+## Update
+
+```
+Lo usamos para modificar un valor dentro de la base de datos.
+```
+
+```python
+connection = sqlite.connect('mi_db.db')
+
+connection.execute("UPDATE users SET nombre = ? WHERE id = ?", (v_id, v_nombre,))
+connection.commit()
+
 ```
 
 ## 4. SQL Injection
