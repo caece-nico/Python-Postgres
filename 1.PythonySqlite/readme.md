@@ -5,6 +5,8 @@
 3. [Cómo usar Sqlite3?](#3.-como-usar-sqlite3?)
     * [Conexiones en DB](#Conexiones-en-db)
     * [Transacciones en BD](#transacciones-en-bd)
+    * [Cursores](#cursores)
+    * [Where](#where)
 
 ## 1. Intro al proyecto
 
@@ -84,3 +86,68 @@ def create_table():
     with connection:
         connection.execute("INSERT INTO alumnos values (1, 'Nicolas')")
 ```
+
+## Cursores
+
+```
+Es una estructura de datos que permite cargar los resultados de a uno por vez.
+```
+
+__sqlite cursores_ Son un poco distintos, en lugar de tener los resultados uno a uno nos devuelve todo junto pero hay formas de manipularlo.__
+
+```python
+connection = sqlite3.connect('mi_base.db')
+cursor = connection.cursor()
+
+cursor.execute("SELECT * FROM users;")
+
+for row in cursor:
+    print(row)
+
+connection.close()
+```
+
+```python
+connection = sqlite3.connect('mi_base.db')
+connection.row_factory = sqlite3.Row
+cursor = connection.cursor()
+
+cursor.execute("SELECT * FROM users;")
+
+for row in cursor:
+    print(row)
+
+connection.close()
+```
+
+
+Cuando recibimos un cursor con tuplas pordemos decirle al motor quenos revuelve un diccionario.
+
+**IMPORTANTE** A diferencia de otros motores de BD _sqlite_ usa cursores tambien para hacer _inserts_ aunque esta transacción no devuelva nada que podamos iterar.
+
+```python
+connection = sqlite3.connect('mi_bd.db')
+cursor = connection.cursor()
+
+cursor.execute("INSERT INTO users VALUES (1,'nicolas');")
+cursor.execute(f"INSERT INTO users VALUES (1,'{variable}');")
+cursor.commit()
+
+connection.close()
+```
+
+## Where
+
+```
+Lo usamos para hacer filtros. Se escribe desde del FROM
+Los operadores son :
+```
+
+|operador|descripcion|
+|--------|-----------|
+|<|lower than (strict)|
+|>|greater than (strict)|
+|<=|lower equal than|
+|>=|greater equal than|
+|==|equal|
+|!=|Not equal|
