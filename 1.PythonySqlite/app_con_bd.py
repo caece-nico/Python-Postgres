@@ -6,8 +6,10 @@ def visualizar_tareas(cursor):
         print(f" nombre = {data['descripcion']} ,fecha= {data['fecha']}\n")
 
 def ingresar_tarea(con_code_injection):
+
     tarea = input('Ingre la tarea')
     horario = input('Ingrese un horario')
+
     if con_code_injection:
         add_entry(tarea,horario)
     else:
@@ -25,13 +27,14 @@ texto = """Ingrese una de las siguientes opciones \n
 create_table()
 
 opcion = input(texto) 
+fecha='2023.01.25' #Fecha fija que e pasamos a a función de busqueda.
 while opcion != "3":
 
     if opcion == "1":
-        ingresar_tarea(con_code_injection = True)
+        ingresar_tarea(con_code_injection = False)
 
     elif opcion == "2":
-        visualizar_tareas(get_entry())
+        visualizar_tareas(get_entry(fecha))
 
     else:
         print('Opcion incorrecta')

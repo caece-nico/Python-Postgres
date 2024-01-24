@@ -20,14 +20,16 @@ def add_entry(description, date):
 
 
 def add_entry_code_injection(description, date):
+    print("Entro por injection")
     connection.execute("INSERT INTO actividades values (?,?);" ,\
                        (description, date)
                     )
     connection.commit()
 
-def get_entry():
+def get_entry(fecha):
     cursor = connection.cursor()
-    cursor.execute("SELECT * FROM actividades;")
+    cursor.execute("SELECT * FROM actividades WHERE fecha = (?) ;", \
+                   (fecha,))
 
     return cursor.fetchall()
 

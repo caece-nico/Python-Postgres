@@ -7,6 +7,8 @@
     * [Transacciones en BD](#transacciones-en-bd)
     * [Cursores](#cursores)
     * [Where](#where)
+    * [DROP TABLE](#drop-table)
+4. [SQL Injection](#4.-sql-injection)
 
 ## 1. Intro al proyecto
 
@@ -143,6 +145,21 @@ Lo usamos para hacer filtros. Se escribe desde del FROM
 Los operadores son :
 ```
 
+```python
+import sqlte3
+
+connection = sqlite3.connect('mi_db.db')
+cursor = connection.cursor()
+
+cursor.execute("SELECT * FROM users WHERE fecha == (?)" , 
+                (fecha, ) # Agregamos una "," extra porque es un solo campo.
+                )
+
+## Otra forma mas peligrosa - Code injection.
+
+cursor.execute(f"SELECT * FROM users where fecha = '{fecha}'")
+```
+
 |operador|descripcion|
 |--------|-----------|
 |<|lower than (strict)|
@@ -151,3 +168,43 @@ Los operadores son :
 |>=|greater equal than|
 |==|equal|
 |!=|Not equal|
+
+
+## Drop Table
+
+
+Borramos toda una tabla
+
+
+```python
+connection.execute("DROP TABLE users;")
+connection.commit()
+```
+
+## 4. SQL Injection
+
+```
+Ocurre cuando se ingresa una sentencia malisiosa por parámetro.
+Por Ejemplo un DROP TABLE users; 
+```
+
+_EJEMPLO EN PYTHON_
+
+```python
+v_id = "''; DROP TABLE users;'
+cursor.execute(f"SELECT * FROM users where id = {v_id};")
+```
+Este codigo se ejecutaria de la siguiente manera:
+
+SELECT * FROM users WHERE id = '' ; DROP TABLE users;
+
+al no encontrar nada en la primer query pasa automaticamente a la segunda porque tiene el ";"
+
+_¿Cómo solucionamos esto?_
+
+```python
+#USANDO ?
+v_id = 1
+GET_USER = "SELECT * FROM users WHERE id = ?;"
+cursor.execute(GET_USER, (v_id,))
+```
