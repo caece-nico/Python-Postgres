@@ -64,3 +64,23 @@ El concepto de transacción es importante porque nos asegura que todo lo que que
 commit -> lo usamos para confirmat los cambios.
 rollback -> lo usamos para revertir lo que no fué confirmado.
 ```
+
+_Cómo hacemos un commit?_
+
+Hay dos formas.
+
++ La forma manual.
+
+```python
+def create_table():
+    connection.execute("INSERT INTO alumnos values (1, 'Nicolas')")
+    connectin.commit()
+```
+
++ La forma automatica usando un _ContextManager_
+
+```python
+def create_table():
+    with connection:
+        connection.execute("INSERT INTO alumnos values (1, 'Nicolas')")
+```
