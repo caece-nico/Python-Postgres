@@ -88,14 +88,23 @@ _notas importantes_ Esta configuración expone el puerto de postgres en el 5432 
 docker-compose up
 ```
 
-#### Dockerfile - Sqlite
+#### Sqlite
+
+```
+Hay varias formas de usar sqlite.
+1. Local 
+2. En docker
+```
+
+#### 1. Dockerfile - Sqlite
+
 
 [Guia rápida de configuracion](https://thriveread.com/sqlite-docker-container-and-docker-compose/)
 
 
 Creamos el directorio sqlite
 
-````docker
+```docker
 FROM alpine:latest
 # Install SQLite
 RUN apk --no-cache add sqlite
@@ -121,3 +130,40 @@ Ejecutamos la imagen
 ```docker
 docker run -it -v sqlite_data:/data --name sqlite_container sqlite_db -p 3000:3000
 ```
+
+#### 2. Local - Sqlite
+
+Hacerlo local es mas fácil y rápido.
+
+1. Desde la pagina de sqlite vamos a downloads y buscamos para windows _sqlite tools_ (Precompiled Binaries for Windows
+))
+
+[Descargas](https://www.sqlite.org/download.html)
+
+2. Lo descragamos y descomprimimos es un carpeta en el disco D:\src\
+
+3. Creamos una variable de sistema para poder referenciarlo desde linea de comando.
+
+![](/img/sqlite_variable_global_01.png)
+
+4. Desde la linea de comando escribimos el comando para acceder a la terminal
+
+```bash
+sqlite3
+```
+5. Desde el directorio donde estamos posicionados vamos a crear una carpeta que contendrá nuestra BD.
+
+```cmd
+mkdir mi_bd
+sqlite3 mi_bd/bd_prueba
+```
+
+```
+Si vamos a ver esta carpeta vemos que aún no hay nada creado, porque el motor recien la crea cuando la empezamos a usar.
+```
+
+```
+.databses
+```
+
+Ya podemos usar esta base de datos desde python.
