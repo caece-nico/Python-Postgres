@@ -9,6 +9,7 @@
     * [Where](#where)
     * [DROP TABLE](#drop-table)
     * [UPADTE](#update)
+    * [Delete](#delete)
 4. [SQL Injection](#4.-sql-injection)
 
 ## 1. Intro al proyecto
@@ -194,6 +195,22 @@ connection = sqlite.connect('mi_db.db')
 connection.execute("UPDATE users SET nombre = ? WHERE id = ?", (v_id, v_nombre,))
 connection.commit()
 
+```
+
+## Delete
+
+```
+Lo usamos para elimiar uno o varios registros de una tabla.
+```
+
+```python
+connection = sqlite3.connect("mi_base.db")
+
+connection.execute("DELETE FROM users WHERE id = ? and fecha = ?", (v_id, v_fecha))
+
+connection.commit()
+
+connection.close()
 ```
 
 ## 4. SQL Injection
