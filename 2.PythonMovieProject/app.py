@@ -21,8 +21,15 @@ def print_upcoming_movies(tipo, movies):
         print(f"Pelicula = { movie[0]} fecha = {human_date}")
     print("\n\n")
 
+def print_watched_movie_list(username, movies):
+    print(f"-- {username}'s watched movies --")
+    for movie in movies:
+        print(f"{movie[1]}")
+    print("\n\n")
+
 def prompt_watched_movie():
     try:
+        username = input('Ingrese el username: ')
         user_input_title = input('Ingrese la pelicula: ')
         database.watch_movie(user_input_title)
     except Exception as e:
@@ -54,9 +61,12 @@ while user_input != '6':
     elif user_input == '3':
         print_upcoming_movies('All', database.get_movies(False))
     elif user_input == '4':
-        prompt_watched_movie()
+        username = input("Ingrese el nombre del usuario: ")
+        title = input('Ingrese el itutlo: ')
+        database.watch_movie(username, title)
     elif user_input == '5':
-        pass
+        username = input("Ingrese el nombre de usuario: ")
+        print_watched_movie_list(username, database.get_movie_watch(username))
     else:
         print('Se eligió una opción incorrecta')
 
