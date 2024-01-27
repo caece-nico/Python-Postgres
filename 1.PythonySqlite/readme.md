@@ -11,6 +11,8 @@
     * [UPADTE](#update)
     * [Delete](#delete)
 4. [SQL Injection](#4.-sql-injection)
+5. [Objetos BD](#5.-objetos-bd)
+    * [Claves primarias](#claves-primarias)
 
 ## 1. Intro al proyecto
 
@@ -239,4 +241,44 @@ _¿Cómo solucionamos esto?_
 v_id = 1
 GET_USER = "SELECT * FROM users WHERE id = ?;"
 cursor.execute(GET_USER, (v_id,))
+```
+
+## 5. Objetos BD
+
+## Claves Primarias
+
+```
+Es una propiedad de cada tabla que permite identificar de forma unívoca cada registro.
+Es usado para mapear un registro de una tabla con otra tabla.
+```
+
+**TABLA USAARIO** 
+
+|ID|NOMBRE|DIRECCION|
+|--|------|---------|
+|1|NICOLAS L.|XXXX51|
+|1|SILVINA L.|YYYY62|
+
+**TABLA COMPRAS**
+
+|id|id_usaurio|monto|
+|--|-----------|----|
+|101|1|19.87|
+|102|1|23.45|
+
+
+En este ejemplo vemos uqe hay una relacion donde _usuario_(id) es clave primaria y _compras_(id_usuario) es la foranea
+
+```sql
+create table users(
+    id INTEGER PRIMARY KEY,
+    nombre TEXT,
+    dicreccion TEXT);
+
+create table compras(
+    id INTEGER PRIMARY KEY,
+    id_usuario INTEGER,
+    monto REAL,
+    FOREIGN KEY(id_usuario) REFERENCES usuario(id)
+);
 ```
