@@ -4,7 +4,7 @@
 1. [SQLite VS Postgres](#1.-sqlite-vs-postgres)
 2. [Instalacion de Postgres](#2.-instalacion-de-postgres)
 3. [Interactual con Python](#3.-interactuar-con-python)
-4. [Datos sensibles](#4.-datos-sensibles)
+4. [Datos sensibles y variables de entorno](#4.-datos-sensibles-y-variables-de-entorno)
 5. [Introducción a Postgres](#5.-introduccion-a-postgres)
     [Tipo de dato Serial](#tipo-de-dato-serial)
       * [Subtipo de dato Secuencia](#subtipo-de-dato-secuencia)
@@ -121,7 +121,9 @@ with cursor.connection() as cursor:
 
 _Este enfoque es mejor porque cualquier recurso asociado con el cursor es liberado automaticamente despues de su uso._
 
-## 4. Datos sensibles
+## 4. Datos sensibles y variables de entorno
+
+[Mas informacion sobre variables de entorno y ejemplos](https://developer.vonage.com/en/blog/python-environment-variables-a-primer)
 
 ```
 Lo mejor es usar variables de sistema como las que creamos en docker. Generalemnte creamos un file con la extension .env que nos permite crear esta variables de entorno.
