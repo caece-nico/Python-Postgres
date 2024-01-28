@@ -4,6 +4,7 @@
 1. [SQLite VS Postgres](#1.-sqlite-vs-postgres)
 2. [Instalacion de Postgres](#2.-instalacion-de-postgres)
 3. [Interactual con Python](#3.-interactuar-con-python)
+4. [Datos sencibles](#4.-datos-sensibles)
 
 
 ## 1. SQLite vs Postgres
@@ -99,3 +100,25 @@ first_user = cursor.fetch_one()
 
 connection.close()
 ```
+
+
+## 4. Datos sensibles
+
+```
+Lo mejor es usar variables de sistema como las que creamos en docker. Generalemnte creamos un file con la extension .env que nos permite crear esta variables de entorno.
+```
+```python
+pip install python-dotenv
+```
+
+_otra forma de trabajar con variables de entorno es con la libreria os_
+
+[Mas informacion de OS](https://developer.vonage.com/en/blog/python-environment-variables-a-primer)
+
+```python
+from dotenv import load_dotenv
+
+load_dotenv()
+```
+
+_Antes de cargar las variables, las mismas deben estar declaradas e un archivo con extencion .env que python reconoce._
