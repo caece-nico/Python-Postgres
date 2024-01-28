@@ -13,7 +13,10 @@
 4. [SQL Injection](#4.-sql-injection)
 5. [Objetos BD](#5.-objetos-bd)
     * [Claves primarias](#claves-primarias)
-
+    * [ID auto-incremental](#id-auto-incremental)
+    * [JOINS](#joins)
+    * [Order BY y Limit](#order-by-y-limit)
+    * [Like - WildCards](#like-wildcards)
 ## 1. Intro al proyecto
 
 ```
@@ -281,4 +284,78 @@ create table compras(
     monto REAL,
     FOREIGN KEY(id_usuario) REFERENCES usuario(id)
 );
+```
+
+## ID Auto-Incremental
+
+EN lugar de ir a buscar el max id en cada tabla **ESTO PUEDE TRAER PROBLEMAS** podemos user una propiedad para generar el siguiente _ID_. El veneficio de esto es evitar la concurrencia.
+
+Todas las tablas en _sqlite_ tienen algo llamado **rowid**
+ Estos valores se pueden reutilizar , solo aquellos que en algún momento fueron eliminados.
+
+ ```sql
+ create table xx (
+    col xx1 INTEGER PRIMARY KEY autoincrement,
+ )
+ ```
+
+
+ ## JOINS
+
+ ```
+ Lo usamos para trear resultados de dos tablas.
+ ```
+
+ ```sql
+ select user.id, user.name, movie.title
+ from user
+ join movie
+ on user.id = movie.user_id
+ ```
+
+ ## Order BY y Limit
+
+ ```
+Se usa para ordenar resultados por una columna o varias. Copcionalmente se puede usar DESC/ASC, por defecto usa ASC.
+```
+
+```sql
+select id, nombre
+from user
+where id DESC, username ASC;
+```
+
+```
+LIMIT se usa al final de la uery para limitar el numero de resultados que queremos ver. Generalmente se usa con ORDER BY para otener los n primeros registros en base a cierta condición.
+```
+
+
+```sql
+SELECT *
+FROM user
+LIMIT 
+```
+
+## Like Wildcards
+
+```
+Se puede usar LIKE de dos formas:
+% para cual numero de caracteres
+_ para un caracter
+
+Ej. 'Do%'
+
+Doyle
+Do
+
+EJ. %Do - todo lo que termine con Do
+
+Ej. 'Do__s' Match todo lo que empieza con Do y termina con s.
+```
+
+
+```python
+MI_QUERY_LIKE = """select * form user where username like ?;"""
+
+connection.execute(MI_QUERY_LIKE, (param, ))
 ```

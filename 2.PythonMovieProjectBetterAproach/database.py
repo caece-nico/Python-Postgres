@@ -30,8 +30,8 @@ FDX_ADD_USERS = """INSERT INTO users(id, username) values (?,?);"""
 FDX_ADD_MOVIE = """INSERT INTO movies(id, title, release) values (?,?,?);"""
 FDX_GET_MOVIES = """SELECT * FROM movies;"""
 FDX_GET_UPCOMING = """SELECT * FROM movies WHERE release > (?);"""
-FDX_WATCHED_MOVIE = """INSERT INTO watched_movie(id, id_user, id_movie) values (?,?,?);"""
-
+FDX_WATCHED_MOVIE = """INSERT INTO watched_movie( id_user, id_movie) values (?,?);"""
+FDX_BUSCA_TERMINO = """SELECT * FROM movies where title LiKE ?;"""
 
 connection = sqlite3.connect("D:\\Proyectos\\Python-Postgres\\2.PythonMovieProjectBetterAproach\\db_movies.db")
 
@@ -105,7 +105,7 @@ def buscar_id_movie(tabla, parametro):
         with connection:
             cursor = connection.cursor()
             cursor.execute(f"SELECT id from movies where title = ?;", (parametro,))
-            return cursor.fetchall()
+            return cursor.fetchone()
     except Exception as error:
         raise error
     
@@ -123,10 +123,18 @@ def marca_visto(username, movie):
         with connection:
             id_movie = buscar_id_movie('movies', movie)
             id_usu = buscar_id_users('users',username)
-            id_movie_val = id_movie[0]
-            id_usu_val = id_usu[0]
-            print(id_movie_val[0])
-            print(id_usu_val[0])
-            connection.execute(FDX_WATCHED_MOVIE,(2, id_usu_val[0], id_movie_val[0]))
+            print(id_movie[0])
+            print(id_usu[0])
+            connection.execute(FDX_WATCHED_MOVIE,( id_usu[0], id_movie[0]))
+    except Exception as error:
+        raise error
+    
+
+def busca_por_termino(v_pelicula):
+    try:
+        with connection:
+            cursor = connection.cursor()
+            cursor.execute(FDX_BUSCA_TERMINO, (f"%{v_pelicula}%",))
+            return cursor.fetchall()
     except Exception as error:
         raise error

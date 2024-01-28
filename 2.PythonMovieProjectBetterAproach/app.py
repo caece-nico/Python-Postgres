@@ -53,6 +53,15 @@ def prompt_view_movie():
         database.marca_visto(usuario, movie)
     except Exception as error:
         print(error)
+
+def buscar_una_pelicula():
+    try:
+        user_pelicula = input("Ingrese un termino a buscar")
+        films = database.busca_por_termino(v_pelicula=user_pelicula)
+        for data in films:
+            print(f"La pelicula {data[1]} s estreno el {data[2]}")
+    except Exception as error:
+        print(error)
         
 menu = """Opciones disponibles:
 1) Agregar usuario.
@@ -60,14 +69,15 @@ menu = """Opciones disponibles:
 3) Mostrar lista de peliculas.
 4) Mostrar lista de estrenos.
 5) Marcar pelicula vista.
-6) Salir.
+6) Buscar pelicula.
+7) Salir.
 
 La opcion ingresada es: 
 """
 print(menu)
 user_input = input('Ingrese una opcion: ')
 
-while user_input != "6":
+while user_input != "7":
 
     if user_input == "1":
         promt_add_user()
@@ -79,6 +89,8 @@ while user_input != "6":
         view_upcoming_movies()
     elif user_input == "5":
         prompt_view_movie()
+    elif user_input == "6":
+        buscar_una_pelicula()
     else:
         print('La opcion ingresa no es correcta')
 
