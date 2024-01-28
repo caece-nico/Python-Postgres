@@ -7,6 +7,7 @@
 4. [Datos sensibles](#4.-datos-sensibles)
 5. [Introducción a Postgres](#5.-introduccion-a-postgres)
     [Tipo de dato Serial](#tipo-de-dato-serial)
+      * [Subtipo de dato Secuencia](#subtipo-de-dato-secuencia)
     [Como pasar valores en Python/postgres](#Como-pasar-valores-en-pythonpostgres?)
 
 
@@ -153,6 +154,16 @@ CREATE TABLE user(
     id SERIAL PRIMARY KEY,
     nombre TEXT
 )
+```
+
+### Subtipo de dato secuencia
+
+```sql
+CREATE SEQUENCE mi_secuencia;
+
+select currval('mi_secuencia');
+
+select nextval('mi_secuencia');
 ```
 
 
