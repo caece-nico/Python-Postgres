@@ -359,3 +359,16 @@ MI_QUERY_LIKE = """select * form user where username like ?;"""
 
 connection.execute(MI_QUERY_LIKE, (param, ))
 ```
+
+## Indices
+
+```
+Nos ayudan a optimizar las consultas. Organizan las claves como un arbol que se recorre y va partiendo por los valores de las PK. Se llaman B-Tree.
+Hay que tener en cuenta que a veces los inserts se pueden hacer un poco mas lentos por la re-organizacin del indice y el indice es una tabla que ocupa espacio.
+```
+
+```sql
+CREATE INDEX IDX_MOVIE_RELEASE ON movies(release);
+```
+
+_IMPORTANTE_ La columnas pk tienen un index asociado por defecto.

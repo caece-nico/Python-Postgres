@@ -23,6 +23,7 @@ CREATE TABLE IF NOT EXISTS watched_movie(
     FOREIGN KEY (id_movie) REFERENCES movies(id)
 );"""
 
+CREATE_INDEX_MOVIE = """CREATE INDEX idx_movie_time ON movies(release);"""
 
 ##FUNCIONES IMPORTANTES
 
@@ -43,6 +44,13 @@ def crea_tablas():
             connection.execute(CREATE_TABLE_WATCHED)
         except Exception as e:
             return sqlite3.DatabaseError 
+        
+def crea_indices():
+    with connection:
+        try:
+            connection.execute(CREATE_INDEX_MOVIE);
+        except Exception as error:
+            raise error
         
 def get_max_id(tabla):
     try:

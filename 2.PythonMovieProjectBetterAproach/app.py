@@ -7,11 +7,12 @@ def promt_add_user():
         database.add_user(user_name_input)
     except Exception as error:
         print(error)
+
 try:
-    valor = database.crea_tablas()
-    print('Error en la llamda: ' + str(valor))
-except Exception as e:
-    print(str(e))
+    database.crea_tablas()
+    database.crea_indices()
+except Exception as error:
+    print(str(error))
 
 def promt_add_movie():
     try:
