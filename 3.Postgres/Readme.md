@@ -4,7 +4,10 @@
 1. [SQLite VS Postgres](#1.-sqlite-vs-postgres)
 2. [Instalacion de Postgres](#2.-instalacion-de-postgres)
 3. [Interactual con Python](#3.-interactuar-con-python)
-4. [Datos sencibles](#4.-datos-sensibles)
+4. [Datos sensibles](#4.-datos-sensibles)
+5. [Introducción a Postgres](#5.-introduccion-a-postgres)
+    [Tipo de dato Serial](#tipo-de-dato-serial)
+    [Como pasar valores en Python/postgres](#Como-pasar-valores-en-pythonpostgres?)
 
 
 ## 1. SQLite vs Postgres
@@ -101,6 +104,21 @@ first_user = cursor.fetch_one()
 connection.close()
 ```
 
+2. Otra forma (MEJOR)
+
+
+```python
+import psycopg2
+
+connection = psycopg2.connect(....)
+
+with cursor.connection() as cursor:
+    cursor.execute(...)
+
+
+```
+
+_Este enfoque es mejor porque cualquier recurso asociado con el cursor es liberado automaticamente despues de su uso._
 
 ## 4. Datos sensibles
 
@@ -122,3 +140,29 @@ load_dotenv()
 ```
 
 _Antes de cargar las variables, las mismas deben estar declaradas e un archivo con extencion .env que python reconoce._
+
+
+## 5. Introduccion a Postgres
+
+### Tipo de dato Serial
+
+En postgers cuando creamos una tabla y queremos que un campo _INTEGER_ sea auto-incremental usamos el tipo _SERIAL_
+
+```sql
+CREATE TABLE user(
+    id SERIAL PRIMARY KEY,
+    nombre TEXT
+)
+```
+
+
+### Como pasar valores en PythonPostgres?
+
+```
+Una de las garndes diferencias en Postgres y SQLite es que en SQLite los valores o parametros se pasan con (?,?) mientras que en postgres se usa (%s,%s)
+```
+
+
+```python
+FDX_INSERT = """INSERT INTO users(id, nombre) VALUES (%s.%s);"""
+```
