@@ -1,0 +1,12 @@
+version: '3.8'
+services:
+  postgres_db_serv:
+    build: ./postgres/
+    container_name: postgres_udemy
+    restart: always
+    ports:
+      - 5432:5432
+    volumes:
+      - ./db_postgres_vol/postgres_vol/:/var/lib/postgresql/data
+
+

@@ -1,2 +1,3 @@
 mi_venv
 db_postgres_vol
+/postgres/db_postgres_vol
