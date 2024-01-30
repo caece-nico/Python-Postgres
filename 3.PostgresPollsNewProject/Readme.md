@@ -9,6 +9,7 @@
     [Tipo de dato Serial](#tipo-de-dato-serial)
       * [Subtipo de dato Secuencia](#subtipo-de-dato-secuencia)
     [Como pasar valores en Python/postgres](#Como-pasar-valores-en-pythonpostgres?)
+6. [ACID](#acid)
 
 
 ## 1. SQLite vs Postgres
@@ -179,4 +180,16 @@ Una de las garndes diferencias en Postgres y SQLite es que en SQLite los valores
 ```python
 FDX_INSERT = """INSERT INTO users(id, nombre) VALUES (%s.%s);"""
 ```
+
+## ACID
+
+Es una propiedad de base de datos relacionales.
+
+|sigla|propiedad|descipcion|
+|-----|---------|----------|
+|A|Atomicidad| Las transacciones son indivisibles, cada transaccion debe ser exitosa o fallar, pero no puede haber resultados parciales. Ej. Si hacemos un INSERT y UPDATE en la misma Transaccion ambas deben terminar.
+|C|Consistencia| La reglas y constraints se deben cumplir en todo momento. No podemos tener una FK que apunta a un valor de PK que no existe.|
+|I|Isolacion|Data solo es visible para cada transaccion que la generó hasta que la misma es commiteada y visible para todas las transacciones|
+|D|Durabilidad| HAce referencia a las persistencia de los datos en disco. Un contraejemplo es el procesamiento en memoria, es mas rapido pero riesgoso.|
+
 
