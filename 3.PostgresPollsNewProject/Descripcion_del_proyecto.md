@@ -1,6 +1,9 @@
 # Proyecto Poll APP
 
-# Introducción.
+1. [Introducción](#Introduccion)
+2. [Estructura DB](#estructura-db)
+
+## Introduccion
 
 ```
 Los usuarios podrán crear Polls, ver las mismas votar y chckear la cantidad de votos de cada una.
@@ -33,3 +36,12 @@ Menu
 4. En 4 se muestra la poll que quiera el usuario con los porcentajes de cada poll.
 
 
+## Estructura DB
+
+Para este proyecto tenemos tres tablas.
+
+|tabla|funcion|
+|-----|-------|
+|polls|id(pk), title, owner|
+|options|id(pk) option_text, poll_id(FK)|
+|votes|user_name, option_id(fk)|
