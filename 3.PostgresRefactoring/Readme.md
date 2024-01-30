@@ -179,3 +179,4 @@ Una de las garndes diferencias en Postgres y SQLite es que en SQLite los valores
 ```python
 FDX_INSERT = """INSERT INTO users(id, nombre) VALUES (%s.%s);"""
 ```
+
