@@ -16,6 +16,8 @@
   + [Nested querys](#7.3-nested-querys)
   + [SQL built-in functions](#7.4-sql-built-in-functions)
   * [Group BY](#7.5-group-by)
+  + [Windows Functions](#7.6-window-functions)
+  + [Partition BY](#7.7-partition-by)
 
 
 ## 1. SQLite vs Postgres
@@ -370,3 +372,64 @@ __Porqué hacemos esto: sum(count(votes.option_id)) over() * 100?__
 
 Ya que todos los datos están en la misma tabla y necesitamos dividir el total de la suma de cada opción por el total de votos de una encuesta, la única forma de optener el total de votos para toda la poll = 3 es usando la sentencia _over_ ya que nos permite volver sobre toda la tabla y no sobre la agrupación.
 
+
+### 7.6 Window Functions
+
+```
+Las windows functions tienen acceso a todo lo que tenemos en el FROM.
+Si no ponemos nada en el OVER() Postgres asume que la tabla relacionado es todo a lo que tenga acceso.
+Widows Functions solo tienen acceso a los registros que fueron filtrados en el WHERE.
+```
+
+#### ORDER BY  - Window Functions.
+
+```
+Queremos ver la cantidad toal de votos que recibió cada encuesta y luego hacer un ranking de la misma para ver cual fue la mas votada.
+```
+
+```sql
+select p.title,count(v.option_id), rank() over(order by count(v.option_id) desc)
+from polls p
+left join "options" o 
+on p.id  = o.poll_id 
+left join votes v  
+on o.id = v.option_id 
+group by p.title;
+```
+
+_En este caso __OVER()__ no puede ir solo porque sino iria contra toda la tabla, pero queremos que ordene el count() total__
+
+### 7.7 Partition BY
+
+__EJEMPLO__
+
+Queremos ver agrupado por _title_ el total de votos por cada opcion y rankeado por _titulo_  + _opacion_
+
+```sql
+select p.title , o.option_text , count(v.option_id), dense_rank () over(partition by p.title order by count(v.option_id ))
+from polls p 
+left join "options" o 
+on p.id = o.poll_id 
+left join votes v 
+on v.option_id  = o.id 
+group by p.title, o.option_text 
+```
+
++ _dense_rank() vs rank()_
+
+Cuando tenemos valores dentro de un __rank__ que no cambian el _rank_ no tomo en cuenta el valor siguiente y lo saltea.
+El _dense_rank_ empieza desde el ultimo valor rankeado.
+
+ejemplo rank.
+
+|vendedor|totales|rank|dense_rank|
+|--------|-------|----|----------|
+|nicolas|456|1|1|
+|patricio|456|1|1|
+|alejandro|456|1|1|
+|martin|345|4|2|
+
+```
+En este ejemplo tenemos los tres primeros vendedores con rank 1 pero el último tiene el valor total de regsitros salteados.
+Si usaramos dense_rank el ranking quedarias 1->1->1->2
+```
