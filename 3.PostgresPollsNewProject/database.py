@@ -60,10 +60,10 @@ def create_poll(psycopg2, connection, poll_title, poll_owner, options):
 
                 opciones_lista = [(opcion_val, poll_id) for opcion_val in options]
 
-                #for v_options in opciones_lista:
-                #    cursor.execute(INSERT_OPTION, v_options)
+                for v_options in opciones_lista:
+                    cursor.execute(INSERT_OPTION, v_options)
 
-                execute_values(cursor, INSERT_OPTION, opciones_lista)
+                #execute_values(cursor, INSERT_OPTION, opciones_lista)
 
     except (Exception, psycopg2.DatabaseError) as error:
         raise error
