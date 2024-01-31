@@ -27,10 +27,10 @@ def crea_tablas(psycopg2, connection):
         raise  error  
     
 
-def get_polls(connection):
+def get_polls(psycopg2, connection):
     try:
         with connection:
-            with connection.cursor as cursor:
+            with connection.cursor() as cursor:
                 cursor.execute(SELECT_ALL_POLLS)
                 return cursor.fetchall()
     except (Exception, psycopg2.DatabaseError) as error:

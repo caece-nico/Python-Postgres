@@ -82,8 +82,8 @@ def randomiza_poll_winner(psycopg2, connection):
 
 
 MI_MENU =  {
-    1:prompt_create_pool,
-    2:list_open_poll
+    1 : prompt_create_pool,
+    2 : list_open_poll
 }
 
 try:
@@ -104,8 +104,9 @@ except Exception as error:
 user_input = int(input(MENU_PROMPT))
 
 
-while user_input:
+while user_input != "":
     try:
+        print(MI_MENU)
         MI_MENU[user_input](psycopg2, connection)
     except KeyError:
         print('Ingresaste una opción incorrecta')
