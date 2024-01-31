@@ -18,6 +18,8 @@
   * [Group BY](#7.5-group-by)
   + [Windows Functions](#7.6-window-functions)
   + [Partition BY](#7.7-partition-by)
+  + [Distinct ON](#7.8-distinct-on)
+
 
 
 ## 1. SQLite vs Postgres
@@ -433,3 +435,26 @@ ejemplo rank.
 En este ejemplo tenemos los tres primeros vendedores con rank 1 pero el último tiene el valor total de regsitros salteados.
 Si usaramos dense_rank el ranking quedarias 1->1->1->2
 ```
+
+### 7.8 DISTINCT ON
+
+```
+Esta sentencia nos permite optener el primer registro de un set de registros agrupados.
+```
+
+_EJEMPLO_
+
+Queremos obetenr la opcion mas votada de cada encuesta.
+
+```sql
+SELECT 
+        distinct on (options.option_text)  opti ,
+        count(votes.option_id)
+from polls
+left join options on polls.id = options.poll_id
+left join votes ON votes.option_id  = options.id
+group by opti , options.option_text
+order by opti desc, count(votes.option_id) desc;
+```
+
+__NO FUNCIONA__
