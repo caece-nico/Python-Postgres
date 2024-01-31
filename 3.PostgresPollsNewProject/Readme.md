@@ -10,6 +10,9 @@
       * [Subtipo de dato Secuencia](#subtipo-de-dato-secuencia)
     [Como pasar valores en Python/postgres](#Como-pasar-valores-en-pythonpostgres?)
 6. [ACID](#acid)
+7. [Funcionalidad de Postgres - SQL](#funcionalidad-de-postgres-sql)
+  + [Returning](#7.1-returning)
+  + [Psycopg2 - execute_value](#7.2-psycopg2-execute_value)
 
 
 ## 1. SQLite vs Postgres
@@ -193,3 +196,59 @@ Es una propiedad de base de datos relacionales.
 |D|Durabilidad| HAce referencia a las persistencia de los datos en disco. Un contraejemplo es el procesamiento en memoria, es mas rapido pero riesgoso.|
 
 
+## 7. Funcionalidad de Postgres SQL
+
+### 7.1 Returning
+
+```
+Lo usamos para devolver el ID de lo ultimo insertado. Tambien se puede usar para en DELETE y UPDATE.
+```
+
+_EJEMPLO SIN RETURN_
+
+
+Para aplicar este ejemplo debemos recordar la propiedad ACID (ISOLACION)
+done lo que ocurre dentro de una transaccion está aislado de las demas hasta hacer un __commit__
+```python
+with connection:
+  with connection.cursor() as cursor:
+    cursor.execute("INSERT INTO polls(titulo, owner) VALUES (%s, %s);", (title, owner))
+    cursor.execute("SELECT id FROM polls ORDER BY id DESC LIMIT 1;")
+    return cursor.fetchone()[0]
+```
+
+Esto funciona porque está todo dentro de una sola transacción y el id (Autoincremental) solo es visible en la transacci+on actual. Pero una vez que salimos del _WITH_ se comitea porque se cierra la conexión.
+
+_CON RETURNING_
+
+```python
+with connection:
+  with connection.cursor() as cursor:
+    cursor.execute("INSERT INTO polls(titulo, owner) values (%s, %s) returning id;",(title, owner))
+
+    return cusor.fetchone()[0] #Tiene el ultimo id insertado. 
+```
+
+Este enfoque es mejor y más limpio, hay menos codigo y es 100% SQL.
+
+
+### 7.2 Psycopg2 execute_value
+
+Dentro de las extencion _extras_ existe una funcionalidad para pasar valores a una query sin hacer un for loop.
+
+```python
+from psycopg2.extras import execute_value
+
+mi_lista_tupla = [(1, valor) from valor in otra_lista]
+
+execute_value(cursor, MI_SENTENCIA_INSERT, mi_lista_tupla)
+```
+
+Esto es equivalente a hacer.
+
+```python
+mi_lista_tupla = [(1, valor) from valor in otra_lista]
+
+for idx, valor in mi_lista_tupla:
+  cursor.execute(MI_SENTENCIA_INSERT, (idx, valor))
+```
