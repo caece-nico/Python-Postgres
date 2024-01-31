@@ -13,6 +13,7 @@
 7. [Funcionalidad de Postgres - SQL](#funcionalidad-de-postgres-sql)
   + [Returning](#7.1-returning)
   + [Psycopg2 - execute_value](#7.2-psycopg2-execute_value)
+  + [Nested querys](#7.3-nested-querys)
 
 
 ## 1. SQLite vs Postgres
@@ -252,3 +253,57 @@ mi_lista_tupla = [(1, valor) from valor in otra_lista]
 for idx, valor in mi_lista_tupla:
   cursor.execute(MI_SENTENCIA_INSERT, (idx, valor))
 ```
+
+### 7.3 Nested Querys
+
+```
+Necesitamos nested querys para obtener  las ultimas polls y sus opciones
+```
+
+```sql
+select *
+from polls
+inner join options on polls.id = options.poll_id
+where polls.id =
+                  (
+                    select id 
+                    from polls 
+                    order by id 
+                    desc limit 1)                 
+```
+
++ Las nested querys se pueden usar en _SELECT_ _WHERE_ , etc.
+
+__EJEMPLO__
+
+Cuantas opciones tienen las encuentas?
+
+```sql
+select id,
+        (select count(*) from options where options.poll_id = polls.id) as cuenta
+from polls;
+```
+
+__EJEMPLO CON INSERT__
+
+```sql
+INSERT INTO poll_authors(
+                        select poll_owner from polls
+                        );
+```
+
+### WITH
+
+_Buscamos los datos de la ultima polls ingresada_
+
+```sql
+WITH latest_id as(
+  SELECT id FROM polls ORDER BY id DESC LIMIT 1
+)
+
+select *
+from polls inner join options on polls.id = options.poll_id 
+where polls.id = (select * from latest_id);
+```
+
+

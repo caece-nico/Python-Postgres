@@ -11,6 +11,9 @@ SELECT_ALL_POLLS = """SELECT * FROM polls; """
 SELECT_POLL_WITH_OPTIONS = """SELECT poll.id, options.option_text FROM polls INNER JOIN options 
 ON polls.id = options.poll_id
 WHERE polls.id = %s;"""
+SELECT_LATEST_POLLS = """SELECT * FROM polls INNER JOIN options
+ON polls.id = options.polls_id WHERE polls.id = (SELECT id FROM polls 
+ORDER BY id DESC LIMIT 1);"""
 
 INSERT_OPTION = "INSERT INTO options (option_text, poll_id) VALUES (%s, %s);"
 INSERT_VOTE = "INSERT INTO votes (username, option_id) VALUES (%s, %s);"
@@ -36,8 +39,14 @@ def get_polls(psycopg2, connection):
     except (Exception, psycopg2.DatabaseError) as error:
         raise error
     
-def get_latest_poll(connection):
-   pass
+def get_latest_poll(psycopg2, connection):
+   try:
+       with connection:
+           with connection.cursor() as cursor:
+               cursor.execute(SELECT_LATEST_POLLS)
+               return cursor.fetchall()
+   except (Exception, psycopg2.DatabaseError) as error:
+       raise error
 
 
 def get_poll_details(connection, poll_id):
