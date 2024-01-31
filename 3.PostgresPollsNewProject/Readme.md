@@ -14,6 +14,8 @@
   + [Returning](#7.1-returning)
   + [Psycopg2 - execute_value](#7.2-psycopg2-execute_value)
   + [Nested querys](#7.3-nested-querys)
+  + [SQL built-in functions](#7.4-sql-built-in-functions)
+  * [Group BY](#7.5-group-by)
 
 
 ## 1. SQLite vs Postgres
@@ -306,4 +308,65 @@ from polls inner join options on polls.id = options.poll_id
 where polls.id = (select * from latest_id);
 ```
 
+### 7.4 SQL built-in Functions
+
+```
+Existen muchas funciones en SQL que se pueden usar.
+```
+__MATEMATICA__
+
+|funcion|descripcion|
+|-------|-----------|
+|random()| value entre 0 y 1|
+|abs(x) | valor absoluto de x|
+|mod(y,x) | el resto entre y/x|
+
+__AGREGACION____
+
+|funcion|descripcion|
+|-------|-----------|
+|count(expr)| Valor total de registros|
+|avg(expr) | Devuelve el promedio |
+|max(exp) | Devuelve el maximo |
+
++ ¿Cómo obtener un valor random?
+
+```sql
+SELECT *
+FROM votes
+WHERE option_id = %s 
+ORDER BY random()
+LIMIT 1;
+```
+
+### 7.5 Group BY
+
+```
+Se usa para devolver valores de columnas agrupadas.
+Se usa con function calculadas como AVG, COUNT, MAX, MIN, ETC
+```
+
+```sql
+SELECT poll_owner, COUNT(*)
+FROM polls
+GROUP BY poll_owner;
+```
+
+_¿Cómo optenemos el % de la votacion de una encuenta por cada opcion?_
+
+```sql
+select 
+	id , 
+	options.option_text , 
+	count(votes.option_id),
+	count(votes.option_id) /   sum(count(votes.option_id)) over() * 100
+from options
+left join votes 
+on options.id = votes.option_id 
+where options.poll_id  = 3
+group by options.id
+```
+__Porqué hacemos esto: sum(count(votes.option_id)) over() * 100?__
+
+Ya que todos los datos están en la misma tabla y necesitamos dividir el total de la suma de cada opción por el total de votos de una encuesta, la única forma de optener el total de votos para toda la poll = 3 es usando la sentencia _over_ ya que nos permite volver sobre toda la tabla y no sobre la agrupación.
 

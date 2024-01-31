@@ -66,7 +66,7 @@ def show_poll_votes(psycopg2, connection):
 
     try:
         poll_and_votes = database.get_poll_and_vote_results(psycopg2, connection, poll_id)
-    except ZeroDivisionError as error:
+    except (ZeroDivisionError, Exception, psycopg2.DatabaseError) as error:
         print(f"No hay votos aun {error}")
     else:
         for _id, option_text, count, percentage in poll_and_votes:
@@ -83,7 +83,8 @@ def randomiza_poll_winner(psycopg2, connection):
 
 MI_MENU =  {
     1 : prompt_create_pool,
-    2 : list_open_poll
+    2 : list_open_poll,
+    4 : show_poll_votes
 }
 
 try:
