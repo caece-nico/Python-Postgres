@@ -19,6 +19,9 @@
   + [Windows Functions](#7.6-window-functions)
   + [Partition BY](#7.7-partition-by)
   + [Distinct ON](#7.8-distinct-on)
+  + [SQL VIEW](#7.9-sql-view)
+  + [Constraints - CHECK](#7.10-contraints-check)
+8 [Python HINTING](#8.-python-hinting)
 
 
 
@@ -457,4 +460,120 @@ group by opti , options.option_text
 order by opti desc, count(votes.option_id) desc;
 ```
 
-__NO FUNCIONA__
+__NO FUNCIONA__ Remplazar por rank()
+
+### 7.9 SQL VIEW
+
+```
+Una vista es un nombre para una query.
+Son parecidas a las tablas pero si la vista no está materializada la query se ejecuta siempre, caso contrario no.
+```
+
+```sql
+CREATE VIEW most_voted_options as
+  SELECT *
+  FROM votes;
+```
+
+|Tipos de vistas|Descripcion|Limitaciones|
+|---------------|-----------|------------|
+|UPDATABLE VIEWS| Tambien llamada simple VIEW, permite UPDATE, DELETE y INSERTS|1. No puede tener mas de una tabla en el FROM, HAVING, Agg. Functions. 2. No Usa los operadores UNION, INTERSECT, etc o Window Functions.|
+
+```sql
+INSERT INTO mi_vista VALUES (xx,xx);
+```
+
+```
+Podemos insertar en una vista sin seguir la condición del WHERE
+... WHERE salary > 5000;
+Pero no podemos hacer UPDATE o DELETE de registros que no están en la vista.
+```
+
+_LOCAL CHECK OPTION_
+
+La usamos para que solo podamos modificar una vista siguiendo la condición del WHERE.
+
+```sql
+CREATE VIEW mostrar_sueldos as
+  SELECT *
+  FROM employees
+  WHERE  salary > 5000
+  WITH LOCAL CHECK OPTION;
+```
+No acepta INSERT, DELETE o UPDATE con sueldos < 5000
+
+_WITH CASCADE CHECK OPTION_
+
+Si no especificamos esta opción las _sub-vistas_ pueden hacer inserts o deletes violando la restrinccion de la vista padre.
+
+```sql
+CREATE VIEW mostrar_sueldo_investigadores AS
+SELECT *
+FROM mostrar_sueldos
+WHERE DEP_ID = 'investigadores'
+WITH CHECK OPTION;
+```
+
+Esta vista  aceptaria  un INSERT con una salario menor a 5000 pero no un departamento distinto de 'investigacion'
+
+_Si queremos reforzar esta relación a la vista hija le agregamos __WITH CASCADE CHECK OPTION__._
+
+
+#### Vistas Materializadas.
+
+
+```
+Son vistas donde los datos estan persistidos en disco, la query no se ejecuta cada vez que se llama.
+Mas rápidas pero ocupan espacio y se deben refrescar. Utiles cuando no necesitamos la ultima data.
+```
+
+```sql
+CREATE MATERIZALIZED VIEW name AS .....
+
+REFRESH MATERIALIZED  VIEW name;
+```
+
+### 7.10 Contrainsts CHECK
+
+```
+Es una restriccion a nivel de una o mas columnas, útil para limitar lo que se inserta o hace update.
+```
+
+```sql
+CREATE TABLE ventas(
+  id INTEGER PRIMARY KEY,
+  articulo_id INTEGER,
+  monto FLOAT CHECK (monto > 0), -- para una columna.
+  discount_price FLOAT,
+  CHECK (monto > discount_price); -- para varias columnas.
+)
+```
+
+# 8. Python Hinting.
+
+```
+Permite evitar Bugs. Cada paremetro de una función le decimos de que tipo debe ser y que debe devolver.
+```
+
+```python
+from typing import List, Touple
+
+Poll = Tuple[int, int, str] #id, count, username
+
+def mi_funcion(connection, poll_id: int):
+  pass
+
+def otra_funcion(connection, name: str, options: List[str]):
+  pass
+
+def otra_funcion(connection, name: str) -> Poll:
+  pass
+```
+
+Ejemplos.
+
+|Necesidad|Type hint|Ejemplo|
+|---------|---------|--------|
+|Esperamos una lista de strings| List[str]|def funcion(dato: List[str])|
+|Quiero devolver una tuple de Postgres que tiene int, int, str| dato = Tuple[int, int, str]| def funcion(dato: int) -> dato:|
+|Si no quiero devolver nada de un funcion|None| def funcion() -> None:
